@@ -67,11 +67,7 @@ def run(win, space, fps, balls):
         pygame.display.update()
 
         if line_started:
-            try:
-                space.remove(line_path, line_path_shape)
-            except:
-                pass
-
+            space.remove(line_path, line_path_shape)
             line_path_shape = pymunk.Segment(line_path, line_start_pos, pygame.mouse.get_pos(), 2)
             space.add(line_path, line_path_shape)
 
@@ -84,12 +80,15 @@ def run(win, space, fps, balls):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_b:
                     mode = "ball"
+                    if line_started:
+                        space.remove(line_path, line_path_shape)
+                        line_started = False
                 elif event.key == pygame.K_l:
                     mode = "line"
             
             # Draw objects
             if event.type == pygame.MOUSEBUTTONDOWN:
-                bt_left, bt_wheel, bt_right = pygame.mouse.get_pressed()
+                bt_left, _, bt_right = pygame.mouse.get_pressed()
                 if bt_left:
                     # Ball falling mode
                     if mode == "ball":
@@ -101,6 +100,7 @@ def run(win, space, fps, balls):
                             line_started = True
                             line_start_pos = pygame.mouse.get_pos()
                             line_path_shape = pymunk.Segment(line_path, line_start_pos, pygame.mouse.get_pos(), 2)
+                            space.add(line_path, line_path_shape)
                         else:
                             line_started = False
 
