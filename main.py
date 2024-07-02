@@ -48,6 +48,7 @@ def run(win, space, fps, balls):
     line_start_pos = (0, 0)
     line_path = pymunk.Body(body_type=pymunk.Body.STATIC)
     line_path_shape = pymunk.Segment(line_path, (0, 0), (0, 0), 2)
+    info = font.render("ball(b), line(l)", False, (0, 0, 0))
 
     while run:
         # Update simulation
@@ -61,6 +62,7 @@ def run(win, space, fps, balls):
         # Show mode on window
         surface = font.render(f"Mode: {mode}", False, (0, 0, 0))
         win.blit(surface, (10, 10))
+        win.blit(info, (10, 30))
 
         pygame.display.update()
 
@@ -84,8 +86,6 @@ def run(win, space, fps, balls):
                     mode = "ball"
                 elif event.key == pygame.K_l:
                     mode = "line"
-                elif event.key == pygame.K_d:
-                    mode = "draw"
             
             # Draw objects
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -109,10 +109,6 @@ def run(win, space, fps, balls):
                             space.add(body, shape)
 
                             space.remove(line_path, line_path_shape)
-                    
-                    # Free drawing mode
-                    else:
-                        pass
                 
                 # Apply impulse force to the object
                 if bt_right:
