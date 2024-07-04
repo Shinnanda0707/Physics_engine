@@ -46,8 +46,6 @@ def run(win, space, fps, balls):
     mode = "ball"
     line_started = False
     line_start_pos = (0, 0)
-    line_path = pymunk.Body(body_type=pymunk.Body.STATIC)
-    line_path_shape = pymunk.Segment(line_path, (0, 0), (0, 0), 2)
     info = font.render("ball(b), line(l)", False, (0, 0, 0))
 
     while run:
@@ -64,12 +62,9 @@ def run(win, space, fps, balls):
         win.blit(surface, (10, 10))
         win.blit(info, (10, 30))
 
-        pygame.display.update()
-
+        # Create line when the variable mode is "line" and line was started
         if line_started:
-            space.remove(line_path, line_path_shape)
-            line_path_shape = pymunk.Segment(line_path, line_start_pos, pygame.mouse.get_pos(), 2)
-            space.add(line_path, line_path_shape)
+            pygame.draw.line(win, (0, 255, 0), line_start_pos, pygame.mouse.get_pos())
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -81,7 +76,6 @@ def run(win, space, fps, balls):
                 if event.key == pygame.K_b:
                     mode = "ball"
                     if line_started:
-                        space.remove(line_path, line_path_shape)
                         line_started = False
                 elif event.key == pygame.K_l:
                     mode = "line"
@@ -99,22 +93,20 @@ def run(win, space, fps, balls):
                         if not line_started:
                             line_started = True
                             line_start_pos = pygame.mouse.get_pos()
-                            line_path_shape = pymunk.Segment(line_path, line_start_pos, pygame.mouse.get_pos(), 2)
-                            space.add(line_path, line_path_shape)
                         else:
                             line_started = False
 
                             body = pymunk.Body(body_type=pymunk.Body.STATIC)
                             shape = pymunk.Segment(body, line_start_pos, tuple(pygame.mouse.get_pos()), 2)
                             space.add(body, shape)
-
-                            space.remove(line_path, line_path_shape)
                 
                 # Apply impulse force to the object
                 if bt_right:
                     for ball in balls:
-                        ball.poly.body.apply_impulse_at_local_point((10000, 0), pygame.mouse.get_pos())
-
+                        ball.poly.body.apply_impulse_at_local_point((6000, 0), pygame.mouse.get_pos())
+        
+        # Update window
+        pygame.display.update()
     pygame.quit()
 
 
