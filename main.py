@@ -7,7 +7,7 @@ font = pygame.font.SysFont("Consolas", 20)
 
 # Define object class
 class Object():
-    def __init__(self, mass, radius: float, position: tuple, color: tuple, space) -> None:
+    def __init__(self, mass: float, radius: float, position: tuple, color: tuple, space) -> None:
         self.mass = mass
         self.radius = radius
         self.x, self.y = position
@@ -23,7 +23,7 @@ class Object():
         space.add(self.object_var, self.poly)
 
 
-def create_boundaries(space, width, height):
+def create_boundaries(space, width: float, height: float) -> None:
     rects = [
         [(width / 2, height - 2.5), (width, 5)],
         [(width / 2, 2.5), (width, 5)],
@@ -38,8 +38,13 @@ def create_boundaries(space, width, height):
         space.add(body, shape)
 
 
+def create_guide_line(window, start_pos: tuple, line_started: bool) -> None:
+    if line_started:
+        pygame.draw.line(window, (0, 255, 0), start_pos, pygame.mouse.get_pos(), 2)
+
+
 # Define main loop
-def run(win, space, fps, balls):
+def run(win, space, fps: int, balls: list) -> None:
     create_boundaries(space, 700, 700)
     clock = pygame.time.Clock()
     run = True
@@ -63,8 +68,7 @@ def run(win, space, fps, balls):
         win.blit(info, (10, 30))
 
         # Create line when the variable mode is "line" and line was started
-        if line_started:
-            pygame.draw.line(win, (0, 255, 0), line_start_pos, pygame.mouse.get_pos())
+        create_guide_line(win, line_start_pos, line_started)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
