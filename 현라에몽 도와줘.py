@@ -1,10 +1,11 @@
 import pymunk
+import pymunk.body
 import pymunk.pygame_util
 import pygame
 import math
 import sys
 
-fps = 100
+fps = 60
 dt = 1/fps
 
 pygame.init()
@@ -21,36 +22,66 @@ def calculate_angle(p1,p2):
     return math.atan2(p2[1] - p1[1] , p2[0] - p1[0])
 
 #배경 그리기
-def draw(space, window, draw_options):
+def draw(space, window, draw_options,line):
     window.fill("white")
-    space.debug_draw(draw_options)
 
-def create_segment(space, first_pos, line):
     if line:
-        body = pymunk.Body(body_type=pymunk.Body.STATIC)
-        #body.position = pos
-        shape = pymunk.Segment(body, line[0], line[1], 3)#3은 두께
-        shape.elasticity = 1
-        shape.friction = 0.5
-        space.add(body, shape)
-        
+        pygame.draw.line(window, "black", line[0], line[1], 3)#3은 두께
+
+    space.debug_draw(draw_options)
+    pygame.display.update()
 
 #배경 벽
 def create_boundaries(space, width, height):
     rects = [
-        [(width / 2, height - 2.5), (width, 5)],
-        [(width / 2, 2.5), (width, 5)],
-        [(2.5, height / 2), (5, height)],
-        [(width - 2.5, height / 2), (5, height)] 
+        [(width / 2, height - 10), (width, 20)],
+        [(width / 2, 10), (width, 20)],
+        [(10, height / 2), (20, height)],
+        [(width - 10, height / 2), (20, height)] 
     ]
 
     for pos, size in rects:
         body = pymunk.Body(body_type=pymunk.Body.STATIC)
         body.position = pos
         shape = pymunk.Poly.create_box(body, size)
-        shape.elasticity = 1
+        shape.elasticity = 0.4
         shape.friction = 0.5
         space.add(body, shape)
+
+#구조물 만들기
+def create_structure(space, width, height):
+    brown = (139,69,19,100)
+    rects = [
+        [(600, height - 120), (40, 200), brown, 100],
+        [(900, height - 120), (40, 200), brown, 100],
+        [(750, height - 240), (340, 40), brown, 150]
+    ]
+
+    for pos, size, color, mass in rects:
+        body = pymunk.Body()
+        body.position = pos
+        shape = pymunk.Poly.create_box(body, size, radius=2)
+        shape.color = color
+        shape.mass = mass
+        shape.elasticity = 0.4
+        shape.friction = 0.4
+        space.add(body, shape)
+
+def create_pendulum(space):
+    rotation_center_body = pymunk.Body(body_type=pymunk.Body.STATIC)
+    rotation_center_body.position = (300, 300)
+
+    body = pymunk.Body()
+    body.position = (300, 300)
+    line = pymunk.Segment(body, (0, 0), (255, 0), 5)
+    circle = pymunk.Circle(body, 40, (255, 0))
+    line.friction = 1
+    circle.friction = 1
+    line.mass = 8
+    circle.mass = 30
+    circle.elasticity = 0.9
+    rotation_center_joint = pymunk.PinJoint(body, rotation_center_body,(0,0),(0,0))
+    space.add(circle, line, body, rotation_center_joint)
 
 #볼1 만들기
 def create_Ball(space, radius, mass, pos):
@@ -69,70 +100,44 @@ def run(window, width, height):
     run = True
     clock = pygame.time.Clock()
 
-    balls = []
-    line = None
-    first_pos = None
-    mode = 1
-
-    pygame.display.set_caption("My Poop")
-    Font = pygame.font.SysFont("arial", 20, True, False)
-
     space = pymunk.Space()
-    space.gravity = (0,2000)
+    space.gravity = (0,1000)
 
     create_boundaries(space, width, height)
+    create_structure(space, width, height)
+    create_pendulum(space)
 
     draw_options = pymunk.pygame_util.DrawOptions(window)
+
+    pressed_pos = None
+    ball = None
     
     while run:
-
-        if mode % 3 == 1:
-            Text = Font.render("Mode : Create Balls", True, (34,139,34))
-        elif mode % 3 == 2:
-            Text = Font.render("Mode : Remove Balls", True, (34,139,34))
-        elif mode % 3 == 0:
-            Text = Font.render("Mode : Create Lines", True, (34,139,34))
-        
-        window.blit(Text, (10,10))
-        pygame.display.update()
-
+        line = None
+        if ball and pressed_pos:
+            line = [pressed_pos,pygame.mouse.get_pos()]
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
-            
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if mode % 3 == 1:
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if not ball:
                     pressed_pos = pygame.mouse.get_pos()
-                    for _ in range(5):
-                        ball = create_Ball(space, 30, 100, pressed_pos)
-                        ball.body.body_type = pymunk.Body.DYNAMIC
-                        balls.append(ball)
+                    ball = create_Ball(space, 30, 100, pressed_pos)
+                elif pressed_pos:
+                    ball.body.body_type = pymunk.Body.DYNAMIC
+                    angle = calculate_angle(*line)
+                    force = calculate_distance(*line)*500
+                    fx = math.cos(angle)*force
+                    fy = math.sin(angle)*force
+                    ball.body.apply_impulse_at_local_point((fx, fy), (0,0))
+                    pressed_pos = None
+                else:
+                    space.remove(ball, ball.body)
+                    ball = None
 
-                elif mode % 3 == 2:
-                    if balls:
-                        for i in range(5):
-                            space.remove(balls[i], balls[i].body)
-                        for _ in range(5):
-                            del balls[0]
-                    else:
-                        balls.remove
-            
-                elif mode % 3 == 0:
-                    if not first_pos:
-                        first_pos = pygame.mouse.get_pos()
-                    else:
-                        line = [first_pos, pygame.mouse.get_pos()]
-                        first_pos = None
-
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-                mode += 1
-                line = None
-                first_pos = None
-
-
-        draw(space, window, draw_options)
-        create_segment(space, first_pos, line)
+        draw(space, window, draw_options, line)
 
         space.step(dt)
         clock.tick(fps)
