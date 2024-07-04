@@ -4,7 +4,7 @@ import pygame
 import math
 import sys
 
-fps = 60
+fps = 100
 dt = 1/fps
 
 pygame.init()
@@ -21,23 +21,27 @@ def calculate_angle(p1,p2):
     return math.atan2(p2[1] - p1[1] , p2[0] - p1[0])
 
 #배경 그리기
-def draw(space, window, draw_options, line):
+def draw(space, window, draw_options):
     window.fill("white")
-
-    if line:
-        pygame.draw.line(window, "black", line[0], line[1], 3)#3은 두께
-
-
     space.debug_draw(draw_options)
-    pygame.display.update()
+
+def create_segment(space, first_pos, line):
+    if line:
+        body = pymunk.Body(body_type=pymunk.Body.STATIC)
+        #body.position = pos
+        shape = pymunk.Segment(body, line[0], line[1], 3)#3은 두께
+        shape.elasticity = 1
+        shape.friction = 0.5
+        space.add(body, shape)
+        
 
 #배경 벽
 def create_boundaries(space, width, height):
     rects = [
-        [(width / 2, height - 10), (width, 20)],
-        [(width / 2, 10), (width, 20)],
-        [(10, height / 2), (20, height)],
-        [(width - 10, height / 2), (20, height)] 
+        [(width / 2, height - 2.5), (width, 5)],
+        [(width / 2, 2.5), (width, 5)],
+        [(2.5, height / 2), (5, height)],
+        [(width - 2.5, height / 2), (5, height)] 
     ]
 
     for pos, size in rects:
@@ -64,24 +68,32 @@ def create_Ball(space, radius, mass, pos):
 def run(window, width, height):
     run = True
     clock = pygame.time.Clock()
-    pygame.display.set_caption("text")
-    Font = pygame.font.SysFont("arial", 20, True, False)
-    Text = Font.render("asdf", True, (34,139,34))
 
     balls = []
     line = None
     first_pos = None
     mode = 1
 
+    pygame.display.set_caption("My Poop")
+    Font = pygame.font.SysFont("arial", 20, True, False)
+
     space = pymunk.Space()
-    space.gravity = (0,1000)
+    space.gravity = (0,2000)
 
     create_boundaries(space, width, height)
 
     draw_options = pymunk.pygame_util.DrawOptions(window)
     
     while run:
-        window.blit(Text, (width/2,height/2))
+
+        if mode % 3 == 1:
+            Text = Font.render("Mode : Create Balls", True, (34,139,34))
+        elif mode % 3 == 2:
+            Text = Font.render("Mode : Remove Balls", True, (34,139,34))
+        elif mode % 3 == 0:
+            Text = Font.render("Mode : Create Lines", True, (34,139,34))
+        
+        window.blit(Text, (10,10))
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -111,14 +123,16 @@ def run(window, width, height):
                         first_pos = pygame.mouse.get_pos()
                     else:
                         line = [first_pos, pygame.mouse.get_pos()]
+                        first_pos = None
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 mode += 1
+                line = None
+                first_pos = None
 
 
-        draw(space, window, draw_options, line)
-        if line:
-            line = None
+        draw(space, window, draw_options)
+        create_segment(space, first_pos, line)
 
         space.step(dt)
         clock.tick(fps)
