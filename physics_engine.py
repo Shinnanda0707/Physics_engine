@@ -1,3 +1,6 @@
 def hw():
   print("Hello World!")
-hw()
+
+
+if __name__ == "__main__":
+  hw()
