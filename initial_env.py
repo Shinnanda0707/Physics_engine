@@ -1,8 +1,7 @@
 import pymunk
 
 objs = []
-
-
+ 
 # Define object class
 class Object():
     def __init__(
@@ -49,4 +48,5 @@ class StaticTrack():
 
 # Code here for initial environment
 def create_env(space) -> None:
-    Object(space, 10, (50, 50), (100, 100), (20, 0))
+    obj1 = Object(space, 10, (50, 50), (80, 100), (120, 0))
+    obj2 = Object(space, 20, (50, 50), (700, 100), (0, 0))
