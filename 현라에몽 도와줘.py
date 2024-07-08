@@ -8,7 +8,7 @@ dt = 1/fps
 
 pygame.init()
 
-WIDTH, HEIGHT = 1500, 800
+WIDTH, HEIGHT = 1500, 750
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 #마우스가 그리는 선 길이
@@ -18,6 +18,22 @@ def calculate_distance(p1,p2):
 #그 길이 앵글
 def calculate_angle(p1,p2):
     return math.atan2(p2[1] - p1[1] , p2[0] - p1[0])
+
+def visualize_velocity(window, balls, font, scale_factor: float) -> None:
+    for ball in balls:
+        # Get velocity and position of each ball
+        vel_x, vel_y = ball.body.velocity
+        pos_x, pos_y = ball.body.position
+
+        # Write mass and velocity
+        mass_info = font.render(f"mass: {ball.mass}", True, (0, 0, 0))
+        vel_info = font.render(f"vel: {round(math.sqrt(math.pow(vel_x, 2) + math.pow(vel_y, 2)), 2)}", True, (0, 0, 0))
+        window.blit(mass_info, (pos_x - 10, pos_y - 70))
+        window.blit(vel_info, (pos_x - 10, pos_y - 50))
+
+        # Make guideline pointing ball's moving direction
+        pygame.draw.line(window, (225, 0, 0), (pos_x, pos_y), (pos_x + vel_x * scale_factor, pos_y + vel_y * scale_factor))
+
 
 #배경 그리기
 def draw(space, window, draw_options):
@@ -29,8 +45,8 @@ def create_segment(space, first_pos, line):
         body = pymunk.Body(body_type=pymunk.Body.STATIC)
         #body.position = pos
         shape = pymunk.Segment(body, line[0], line[1], 3)#3은 두께
-        shape.elasticity = 1
-        shape.friction = 0.5
+        shape.elasticity = 0
+        shape.friction = 0
         space.add(body, shape)
     if first_pos:
         pygame.draw.line(window, "black", first_pos, pygame.mouse.get_pos(), 3)#3은 두께
@@ -49,8 +65,8 @@ def create_boundaries(space, width, height):
         body = pymunk.Body(body_type=pymunk.Body.STATIC)
         body.position = pos
         shape = pymunk.Poly.create_box(body, size)
-        shape.elasticity = 1
-        shape.friction = 0.5
+        shape.elasticity = 0
+        shape.friction = 0
         space.add(body, shape)
 
 #볼1 만들기
@@ -81,7 +97,7 @@ def run(window, width, height):
     balls = []
 
     pygame.display.set_caption("Sootk")
-    Font = pygame.font.SysFont("arial", 20, True, False)
+    Font = pygame.font.SysFont("Consolas", 20, True, False)
 
     space = pymunk.Space()
     space.gravity = (0,2000)
@@ -104,6 +120,9 @@ def run(window, width, height):
         
         window.blit(Text, (10,10))
         window.blit(Text_1, (10,30))
+
+        visualize_velocity(window, balls, Font, 0.1)
+        
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -124,25 +143,13 @@ def run(window, width, height):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     if is_pause:
+                        for ball in balls:
+                            ball.body.body_type = pymunk.Body.STATIC
                         is_pause = False
-                        _balls = []
-                        for shape in balls:
-                            print(shape)
-                            space.remove(shape, shape.body)
-                            shape.body_type=pymunk.Body.DYNAMIC
-                            print(shape.body)
-                            space.add(shape,shape.body)
-                            _balls.append(shape)
-                        balls = _balls
                     else:
+                        for ball in balls:
+                            ball.body.body_type = pymunk.Body.DYNAMIC
                         is_pause = True
-                        _balls = []
-                        for shape in balls:
-                            space.remove(shape, shape.body)
-                            shape.body_type=pymunk.Body.STATIC
-                            space.add(shape, shape.body)
-                            _balls.append(shape)
-                        balls = _balls
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 mode += 1
