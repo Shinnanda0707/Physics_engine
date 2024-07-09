@@ -6,6 +6,7 @@ objs = []
 class Object():
     def __init__(
             self, space,
+            name: str,
             mass: float,
             size: tuple[float, float],
             position: tuple[float, float],
@@ -13,6 +14,8 @@ class Object():
         ) -> None:
         self.mass = mass
         self.size = size
+        self.name = name
+        self.initial_velocity = initial_velocity
 
         self.object_var = pymunk.Body()
         self.object_var.position = position
@@ -48,5 +51,6 @@ class StaticTrack():
 
 # Code here for initial environment
 def create_env(space) -> None:
-    obj1 = Object(space, 10, (50, 50), (80, 100), (120, 0))
-    obj2 = Object(space, 20, (50, 50), (700, 100), (0, 0))
+    # obj1 = Object(space, "A", 10, (50, 50), (80, 100), (120, 0))
+    obj1 = Object(space, "A", 10, (50, 50), (80, 100), (300, 0))
+    obj2 = Object(space, "B", 20, (50, 50), (700, 100), (0, 0))
