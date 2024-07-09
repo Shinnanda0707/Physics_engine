@@ -6,7 +6,9 @@ import pymunk.pygame_util
 
 from initial_env import objs, create_env
 pygame.init()
+pygame.mixer.init()
 font = pygame.font.SysFont("Consolas", 15)
+sound = pygame.mixer.Sound("stomp.mp3")
 
 
 def visualize_velocity(window, objs, font, scale_factor: float) -> None:
