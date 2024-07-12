@@ -10,7 +10,7 @@ font = pygame.font.SysFont("Consolas", 15)
 
 
 def calculate_velocity(vel_x: float, vel_y: float) -> float:
-    return round(math.sqrt(math.pow(vel_x, 2) + math.pow(vel_y, 2)))
+    return math.sqrt(math.pow(vel_x, 2) + math.pow(vel_y, 2))
 
 
 def visualize_velocity(window, objs, font, scale_factor: float) -> None:
@@ -22,7 +22,7 @@ def visualize_velocity(window, objs, font, scale_factor: float) -> None:
         # Write mass and velocity
         mass_info = font.render(f"m={obj.mass}", True, (0, 0, 0))
         vel_info = font.render(
-            f"v={calculate_velocity(vel_x, vel_y)}",
+            f"v={round(calculate_velocity(vel_x, vel_y))}",
             True, (0, 0, 0)
         )
         window.blit(mass_info, (pos_x - 17, pos_y + 5))
@@ -103,6 +103,7 @@ def run(win, space, draw_options, fps=50, font=font):
     for obj in objs:
         print(f"{obj.name}: I={(calculate_velocity(*obj.initial_velocity) - calculate_velocity(*obj.object_var.velocity)) * obj.mass}")
     print("=" * 69)
+    input()
 
 
 # Set pygame variables

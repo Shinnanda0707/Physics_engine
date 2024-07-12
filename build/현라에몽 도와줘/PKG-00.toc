@@ -1,0 +1,67 @@
+('C:\\Users\\ch104\\OneDrive\\바탕 '
+ '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 도와줘\\현라에몽 '
+ '도와줘.pkg',
+ {'BINARY': True,
+  'DATA': True,
+  'EXECUTABLE': True,
+  'EXTENSION': True,
+  'PYMODULE': True,
+  'PYSOURCE': True,
+  'PYZ': False,
+  'SPLASH': True},
+ [('PYZ-00.pyz',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\PYZ-00.pyz',
+   'PYZ'),
+  ('struct',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\localpycs\\struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\localpycs\\pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\localpycs\\pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\build\\현라에몽 '
+   '도와줘\\localpycs\\pyimod04_pywin32.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   'C:\\Users\\ch104\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   'C:\\Users\\ch104\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   'C:\\Users\\ch104\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   'C:\\Users\\ch104\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgres',
+   'C:\\Users\\ch104\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgres.py',
+   'PYSOURCE'),
+  ('현라에몽 도와줘',
+   'C:\\Users\\ch104\\OneDrive\\바탕 '
+   '화면\\문서고\\학교\\2024\\주제탐구\\1학기\\물리\\Physics_engine\\현라에몽 도와줘.py',
+   'PYSOURCE')],
+ True,
+ False,
+ False,
+ [],
+ None,
+ None,
+ None)

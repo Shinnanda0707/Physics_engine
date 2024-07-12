@@ -24,6 +24,8 @@ class Object():
         self.poly = pymunk.Poly.create_box(self.object_var, self.size)
         self.poly.mass = self.mass
         self.poly.color = (255, 255, 255, 1)
+        self.poly.elasticity = 0
+        self.poly.friction = 0
 
         space.add(self.object_var, self.poly)
         objs.append(self)
@@ -45,12 +47,13 @@ class StaticTrack():
         self.object_var = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.poly = pymunk.Segment(self.object_var, self.start_pos, self.end_pos)
         self.poly.color = (255, 255, 255, 1)
+        self.poly.elasticity = 0
+        self.poly.friction = 0
 
         space.add(self.object_var, self.poly)
 
 
 # Code here for initial environment
 def create_env(space) -> None:
-    # obj1 = Object(space, "A", 10, (50, 50), (80, 100), (120, 0))
-    obj1 = Object(space, "A", 10, (50, 50), (80, 100), (300, 0))
-    obj2 = Object(space, "B", 20, (50, 50), (700, 100), (0, 0))
+    obj1 = Object(space, "A", 10, (50, 50), (80, 175), (120, 0))
+    obj2 = Object(space, "B", 20, (50, 50), (700, 175), (0, 0))

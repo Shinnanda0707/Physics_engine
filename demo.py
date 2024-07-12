@@ -112,8 +112,7 @@ def run(win, space, fps: int, balls: list) -> None:
                 if bt_left:
                     # Ball falling mode
                     if mode == "ball":
-                        for _ in range(100):
-                            balls.append(Object(10, 10, pygame.mouse.get_pos(), (0, 0, 0, 100), space))
+                        balls.append(Object(10, 20, pygame.mouse.get_pos(), (0, 0, 0, 100), space))
                     
                     # Line drawing mode
                     elif mode == "line":
